@@ -1,0 +1,726 @@
+﻿@model AppUser
+@{
+    Layout = null;
+}
+<link href="~/css/general.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+<header>
+	<nav class="navbar">
+		<div class="container">
+			<div class="logo">
+				<a href="@Url.Action("Index", "Bet")">
+					<img src="https://assets-global.website-files.com/61fa07779bcfb50f37014c53/6373c6dbee36d3876068b216_PointsBet2.jpeg"
+						 alt="img1" height="40px">
+				</a>
+			</div>
+			@*<div class="searchbar">
+			<input type="text"
+			placeholder="Search">
+			<img src="https://media.geeksforgeeks.org/wp-content/uploads/20220609093658/search-200x200.png"
+			height="18"
+			alt="img2">
+			</div>*@
+			<div class="navbar-stuff" style="display: flex; align-items: center; column-gap: 10px;">
+
+				<div class="profile">
+					<a href="@Url.Action("Update", "AppUser")">
+						<img style="border-radius: 50%; width: 30px; height: 30px;" src="~/profilepics/@Model.ProfilePicture"
+							 alt="user Avatar">
+					</a>
+				</div>
+				<form class="form-inline" asp-controller="AppUser" asp-action="Logout">
+					<button class="logout-button" type="submit">Logout</button>
+				</form>
+			</div>
+		</div>
+	</nav>
+</header>
+<div class="center-container" style="position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 150;">
+
+	<div class="container shadow p-3 mb-5 bg-white rounded" style="position: relative;">
+
+    <form asp-controller="AppUser" asp-action="Update" enctype="multipart/form-data">
+
+	  <div class="form-row">
+		<div class="form-group col-md-6">
+		  <label for="inputEmail4">FirstName</label>
+		  <input type="text" class="form-control" placeholder="FirstName" value="@Model.FirstName" asp-for="FirstName">
+		</div>
+		<div class="form-group col-md-6">
+		  <label for="inputPassword4">LastName</label>
+		  <input type="text" class="form-control" placeholder="LastName" value="@Model.LastName" asp-for="LastName">
+		</div>
+	  </div>
+	  <div class="form-group">
+		<label for="inputAddress2">Password</label>
+		<input type="password" class="form-control" placeholder="Password" value="@Model.Password" asp-for="Password">
+	  </div>
+	  <div class="form-group">
+		<label for="inputAddress2">Phone Number</label>
+		<input type="text" class="form-control" placeholder="Phone Number" value="@Model.PhoneNumber" asp-for="PhoneNumber">
+	  </div>
+	  <div class="form-group">
+		<label style="margin-right: 7px;"for="inputAddress2">Profile Picture</label>
+		<img style="width: 30px; height: 30px; border-radius: 50%;" src="~/profilepics/@Model.ProfilePicture"/>
+		<input style="margin-top: 10px;" type="file" class="form-control" placeholder="Profile Picture" asp-for="ProfilePicture" >
+	  </div>
+	  <div class="form-group">
+		<label for="inputAddress2">UserName</label>
+		<input type="text" class="form-control" placeholder="UserName" value="@Model.UserName" asp-for="UserName">
+	  </div>
+	  <div class="form-group">
+		<label for="inputAddress2">Email</label>
+		<input type="text" class="form-control" placeholder="Email" value="@Model.Email" asp-for="Email">
+	  </div>
+	  <div style="display: flex; justify-content: center;">
+				<button style="width: 100%; font-size: 24px;" type="submit" class="btn btn-primary ">
+					Update Profile
+				</button>
+			</div>
+	</form>
+</div>
+</div>
+
+<style>
+	* {
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+	}
+
+	body {
+		font-family: -apple-system, system-ui, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+		background: #fafafa;
+	}
+
+	.navbar {
+		position: fixed;
+		z-index: 100000;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: rgb(255, 255, 255);
+		width: 100%;
+		border: 1px solid rgb(218, 217, 217);
+		margin-bottom: 20px;
+	}
+
+	.comments:hover {
+		cursor: pointer;
+	}
+
+	.mpopupBox {
+		z-index: 1000; /* Adjust the value as needed */
+	}
+
+	.navbar .container {
+		/* background-color: #555; */
+		padding: 15px 0;
+		width: 75%;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		/* margin: 0 auto; */
+	}
+
+	.handle-index {
+		z-index: -1;
+	}
+
+	.container .logo {
+		display: inline-block;
+		cursor: pointer;
+	}
+
+	.searchbar {
+		width: -10%;
+		text-align: end;
+	}
+
+		.searchbar input {
+			background-color: #fafafa;
+			padding: 5px;
+			text-indent: 21px;
+			outline: none;
+			border: 1px solid rgb(218, 217, 217);
+			border-radius: 2px;
+			color: rgb(77, 77, 77);
+		}
+
+		.searchbar img {
+			position: absolute;
+			margin-left: -10.5rem;
+			margin-top: 0.25rem;
+		}
+
+		.searchbar input::placeholder {
+			font-weight: lighter;
+			color: rgb(172, 172, 172);
+		}
+
+	.nav-links {
+		font-weight: lighter;
+		color: rgb(172, 172, 172);
+		/* background: #333  ; */
+	}
+
+	.nav-group .nav-item {
+		list-style-type: none;
+		margin: 0 8px;
+	}
+
+		.nav-group .nav-item a {
+			font-size: 22px;
+			display: block;
+			color: black;
+		}
+
+	.nav-group {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.modal-overlay {
+		BACKGROUND-color: rgb(255,255,255);
+		z-index: 9999;
+		position: absolute;
+		top: 50%;
+		left: 45%;
+		width: 500px;
+		padding: 15px;
+	}
+
+	.action .profile {
+		position: relative;
+		width: 25px;
+		height: 25px;
+		border-radius: 50%;
+		overflow: hidden;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+		.action .profile img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+
+	main {
+		width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+		main .container {
+			position: relative;
+			margin-top: 60px;
+			width: 75%;
+			display: flex;
+			align-items: flex-start;
+			justify-content: space-between;
+			/* background: #ddd; */
+		}
+
+	.col-9 {
+		width: 100%;
+		margin-top: 30px;
+	}
+
+	.statuses {
+		margin-bottom: 30px;
+		width: 100%;
+		background-color: #fff;
+		display: flex;
+		align-items: center;
+		justify-content: start;
+		padding: 20px 0;
+		border-radius: 2px;
+		border: 1px solid rgb(218, 217, 217);
+		overflow: auto;
+	}
+
+		.statuses .status {
+			display: inline-block;
+			border-radius: 50%;
+			overflow: auto;
+			width: 70px;
+			height: 70px;
+			min-width: 70px;
+			min-height: 70px;
+			background: linear-gradient(to right, red, orange);
+			padding: 2px;
+			margin-left: 15px;
+			cursor: pointer;
+		}
+
+	.logout-button {
+		border: none;
+		background: none;
+		color: palevioletred;
+		font-size: 18px;
+	}
+
+		.logout-button:hover {
+			cursor: pointer;
+			color: red;
+		}
+			.statuses .status .image {
+				position: relative;
+				width: 100%;
+				height: 100%;
+				border-radius: 50%;
+				overflow: hidden;
+				cursor: pointer;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				border: 2px solid white;
+			}
+
+			.statuses .status img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+
+	.col-3 {
+		width: 33%;
+		position: -webkit-sticky;
+		position: sticky;
+		top: 90px;
+	}
+
+		.col-3 h4 {
+			color: rgb(100, 100, 100);
+		}
+
+
+		.col-3 .card {
+			margin-bottom: 20px;
+			position: relative;
+			width: 100%;
+			/* min-height: 400px; */
+			display: inline-block;
+		}
+
+			.col-3 .card .top {
+				padding: 10px 0px;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+
+				.col-3 .card .top a {
+					color: #1d92ff;
+				}
+
+			.col-3 .card .bottom {
+				padding: 10px 20px;
+			}
+
+			.col-3 .card .top .userDetails {
+				width: 100%;
+				display: flex;
+				align-items: center;
+			}
+
+				.col-3 .card .top .userDetails h3 {
+					font-size: 16px;
+					color: #4d4d4f;
+					font-weight: 500;
+					line-height: 1em;
+				}
+
+					.col-3 .card .top .userDetails h3 span {
+						font-size: 0.75em;
+					}
+
+					.col-3 .card .top .userDetails h3 span {
+						font-size: 0.75em;
+					}
+
+	.col-9 .card {
+		margin-bottom: 20px;
+		position: relative;
+		width: 100%;
+		/* min-height: 400px; */
+		display: inline-block;
+		border: 1px solid rgba(7, 7, 7, 0.24);
+	}
+
+		.col-9 .card .top {
+			padding: 10px 20px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.col-9 .card .bottom {
+			padding: 10px 20px;
+		}
+
+		.col-9 .card .top .userDetails {
+			width: 100%;
+			display: flex;
+			align-items: center;
+		}
+
+	.profilepic {
+		display: inline-block;
+		cursor: pointer;
+	}
+
+	.add-comment-form {
+		width: 100%;
+	}
+
+	.profilepic .profile_img {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 50%;
+		overflow: hidden;
+		width: 30px;
+		height: 30px;
+		background: linear-gradient(to right, red, orange);
+		padding: 2px;
+		margin-right: 8px;
+		cursor: pointer;
+	}
+
+	.heart-icon-outline:hover {
+		fill: none;
+		stroke: #808080; /* Gray color for outline */
+		stroke-width: 2; /* Adjust the thickness of the outline */
+	}
+
+	.profilepic .profile_img .image {
+		position: relative;
+		width: 100%;
+		height: 100%;
+		border-radius: 50%;
+		overflow: hidden;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border: 2px solid white;
+	}
+
+	.profilepic .profile_img img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.cover {
+		width: 100%;
+		height: 100%;
+	}
+
+	.col-9 .card .top .userDetails h3 {
+		/* width: 100%; */
+		font-size: 16px;
+		color: #4d4d4f;
+		font-weight: 500;
+		line-height: 1em;
+	}
+
+		.col-9 .card .top .userDetails h3 span {
+			font-size: 0.75em;
+		}
+
+		.col-9 .card .top .userDetails h3 span {
+			font-size: 0.75em;
+		}
+
+	.dot {
+		transform: scale(0.6);
+		cursor: pointer;
+	}
+
+	.imgBx {
+		position: relative;
+		width: 100%;
+		min-height: 600px;
+		margin: 10px 0 15px;
+		z-index: -1;
+	}
+
+	.actionBtns {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+		.actionBtns svg {
+			cursor: pointer;
+		}
+
+		.actionBtns .left svg {
+			margin-right: 8px;
+		}
+
+	.likes {
+		font-weight: 500;
+		margin-top: 5px;
+		font-size: 14px;
+		color: #4d4d4f;
+	}
+
+	.message {
+		font-weight: 400;
+		margin-top: 5px;
+		font-size: 14px;
+		color: #777;
+		line-height: 1.5em;
+	}
+
+		.message b {
+			color: #262626;
+		}
+
+		.message span {
+			cursor: pointer;
+			color: #1d92ff;
+		}
+
+	.comments {
+		margin-top: 10px;
+		font-weight: 400;
+		color: #999;
+	}
+
+	.addComments {
+		display: flex;
+		align-items: center;
+		margin-top: 20px;
+		border-top: 1px solid #ddd;
+		padding: 10px 0;
+	}
+
+		.addComments a {
+			color: #1d92ffcb;
+			font-weight: 500;
+			right: 20px;
+		}
+
+		.addComments .reaction {
+			position: relative;
+			font-size: 1.3rem;
+			margin-right: 10px;
+			color: rgb(88, 88, 88);
+		}
+
+	input.text {
+		width: 100%;
+		border: none;
+		outline: none;
+		font-weight: 400;
+		font-size: 14px;
+		color: #262626;
+		background: none;
+	}
+
+		input.text::placeholder {
+			color: #777;
+		}
+
+	.postTime {
+		margin-top: 8px;
+		font-weight: lighter;
+		color: rgb(163, 163, 163);
+		font-size: 12px;
+		text-transform: uppercase;
+	}
+
+	a {
+		text-decoration: none;
+	}
+
+	.hidden {
+		display: none;
+	}
+
+	media screen and (max-width: 1000px) {
+		.col-9
+
+	{
+		width: 100%;
+		background: #fafafa;
+	}
+
+	.col-3 {
+		display: none;
+	}
+
+	}
+
+	media screen and (max-width: 600px) {
+		.container
+
+	{
+		width: 70% !important;
+	}
+
+	.navbar .container {
+		padding: 15px 10px !important;
+	}
+
+	.col-9 {
+		margin-top: 4px;
+		min-width: 100%;
+	}
+
+	.statuses {
+		margin-bottom: 0px;
+	}
+
+	.col-9 .card {
+		margin-bottom: 0px;
+		width: 100%;
+		border: none;
+	}
+
+	.imgBx {
+		position: relative;
+		width: 100%;
+		min-height: 400px;
+		margin: 10px 0 15px;
+	}
+
+	.searchbar {
+		display: none;
+	}
+
+	}
+
+	.footer .footer-section {
+		margin-left: 0.5rem;
+		color: #999999;
+		font-size: 14px;
+		font-family: sans-serif;
+	}
+
+	.footer a:hover {
+		color: #ff0000;
+	}
+
+	.mpopupBox {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.5); /* Light background for modal */
+		overflow: auto;
+		display: none;
+	}
+
+	.modal-content {
+		margin: 10% auto;
+		padding: 20px;
+		width: 80%;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	}
+
+	.modal-header {
+		padding: 10px;
+		background-color: #f1f1f1;
+	}
+
+	.modal-body {
+		padding: 10px;
+	}
+
+	.close {
+		color: #000;
+		float: right;
+		font-size: 20px;
+		font-weight: bold;
+		cursor: pointer;
+	}
+
+	/* Add this CSS to style the dark background overlay */
+	body {
+		transition: background-color 0.3s ease;
+	}
+	/* add animation effects */
+	-webkit-keyframes animatetop {
+		from
+
+	{
+		top: -300px;
+		opacity: 0
+	}
+
+	to {
+		top: 0;
+		opacity: 1
+	}
+
+	}
+
+	keyframes animatetop {
+		from
+
+	{
+		top: -300px;
+		opacity: 0
+	}
+
+	to {
+		top: 0;
+		opacity: 1
+	}
+
+	}
+
+	.g-height-50 {
+		height: 50px;
+	}
+
+	.g-width-50 {
+		width: 50px !important;
+	}
+
+	media (min-width: 0) {
+		.g-pa-30
+
+	{
+		padding: 2.14286rem !important;
+	}
+
+	}
+
+	.g-bg-secondary {
+		background-color: #fafafa !important;
+	}
+
+	.u-shadow-v18 {
+		box-shadow: 0 5px 10px -6px rgba(0, 0, 0, 0.15);
+	}
+
+	.g-color-gray-dark-v4 {
+		color: #777 !important;
+	}
+
+	.g-font-size-12 {
+		font-size: 0.85714rem !important;
+	}
+
+	.media-comment {
+		margin-top: 20px
+	}
+</style>
+

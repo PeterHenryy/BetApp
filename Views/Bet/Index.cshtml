@@ -1,0 +1,1007 @@
+﻿@model BetIndexViewModel
+@{
+	Layout = null;
+	int userID = Model.CurrentUser.Id;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="stylesheet"
+		  href="style.css">
+	<title>Instagram Clone</title>
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+
+
+		<header>
+			<nav class="navbar">
+				<div class="container">
+					<div class="logo">
+					<a href="@Url.Action("Index", "Bet")">
+							<img src="https://assets-global.website-files.com/61fa07779bcfb50f37014c53/6373c6dbee36d3876068b216_PointsBet2.jpeg"
+								 alt="img1" height="40px">
+						</a>
+					</div>
+					@*<div class="searchbar">
+						<input type="text"
+							   placeholder="Search">
+						<img src="https://media.geeksforgeeks.org/wp-content/uploads/20220609093658/search-200x200.png"
+							 height="18"
+							 alt="img2">
+					</div>*@
+
+					<div class="navbar-stuff" style="display: flex; align-items: center; column-gap: 10px;">
+
+						<div class="profile">
+							<a href="@Url.Action("Update", "AppUser")">
+							<img style="border-radius: 50%; width: 30px; height: 30px;" src="~/profilepics/@Model.CurrentUser.ProfilePicture"
+										alt="user Avatar">
+							</a>
+						</div>
+						<form class="form-inline" asp-controller="AppUser" asp-action="Logout">
+							<button  class="logout-button" type="submit">Logout</button>
+						</form>
+					</div>
+
+
+				</div>
+			</nav>
+		</header>
+
+		<!-- Code for Showing the Status -->
+		<main>
+			<div class="container">
+				<form asp-controller="Bet" asp-action="Create" enctype="multipart/form-data">
+					<input placeholder="Type here..." asp-for="Bet.Body" />
+					<input type="file" asp-for="Bet.Image">
+					<button type="submit">Upload Image</button>
+				</form>
+				<div class="col-9">
+					<div class="statuses">
+						<div class="status">
+							<div class="image">
+								<img src="https://media.geeksforgeeks.org/wp-content/uploads/20220604085434/GeeksForGeeks-300x243.png"
+									 alt="img3">
+							</div>
+						</div>
+						<div class="status">
+							<div class="image">
+								<img src="https://media.geeksforgeeks.org/wp-content/uploads/20220609093221/g2-200x200.jpg"
+									 alt="img4">
+							</div>
+						</div>
+						<div class="status">
+							<div class="image">
+								<img src="https://media.geeksforgeeks.org/wp-content/uploads/20220609093241/g3-200x200.png"
+									 alt="img5">
+							</div>
+						</div>
+						<div class="status">
+							<div class="image">
+								<img src="https://media.geeksforgeeks.org/wp-content/uploads/20220609093229/g-200x200.png"
+									 alt="img6">
+							</div>
+						</div>
+						<div class="status">
+							<div class="image">
+								<img src="https://media.geeksforgeeks.org/wp-content/uploads/20220609093221/g2-200x200.jpg"
+									 alt="img7">
+							</div>
+						</div>
+						<div class="status">
+							<div class="image">
+								<img src="https://media.geeksforgeeks.org/wp-content/uploads/20220604085434/GeeksForGeeks-300x243.png"
+									 alt="img8">
+							</div>
+						</div>
+					</div>
+
+					@foreach (var bet in Model.Bets)
+					{
+						<div class="card" style="overflow: hidden">
+						<div class="top">
+							<div class="userDetails">
+								<div class="profilepic">
+									<div class="profile_img">
+										<div class="image">
+											<img src="~/profilepics/@bet.User.ProfilePicture"
+												 alt="img8">
+										</div>
+									</div>
+								</div>
+								<h3>
+										@if (@bet.User.FirstName == null)
+										{
+											@bet.User.UserName
+										}
+
+										<br>
+									<span>Chicago, IL</span>
+								</h3>
+							</div>
+							<div>
+								<span class="dot">
+									<i class="fas fa-ellipsis-h"></i>
+								</span>
+							</div>
+						</div>
+						<div class="imgBx">
+							<img src="~/bets/@bet.Image"
+								 alt="post-1" class="cover">
+						</div>
+						<div class="bottom">
+							<div class="actionBtns">
+								<div class="left">
+										@if(Model.HasUserLikedBet(userID, bet.ID))
+										{
+											<i class="fa-solid fa-heart fa-xl" style="color: #ff0000;"></i>
+										}
+										else
+										{
+											<div class="like-form-container-@bet.ID">
+												<form class="likeForm" data-bet-id="@bet.ID" asp-controller="Bet" asp-action="CreateLike">
+													<input hidden asp-for="Bet.ID" value="@bet.ID">
+												<a href="#" class="heart" data-bet-id="@bet.ID" onclick="incrementLikeCounter(@bet.ID)">
+													<span>
+														<svg aria-label="Like"
+															 color="#373737"
+															 fill="#262626"
+															 height="24"
+															 role="img"
+															 viewBox="0 0 48 48"
+															 width="24"
+															 class="heart-icon-outline">
+															<!-- Coordinate path -->
+															<path d="M34.6 6.1c5.7 0 10.4 5.2 10.4
+																	11.5 0 6.8-5.9 11-11.5 16S25 41.3 24
+																	41.9c-1.1-.7-4.7-4-9.5-8.3-5.7-5-11.5-9.2-11.5-16C3
+																	11.3 7.7 6.1 13.4 6.1c4.2 0 6.5 2 8.1 4.3
+																	1.9 2.6 2.2 3.9 2.5 3.9.3 0 .6-1.3 2.5-3.9
+																	1.6-2.3 3.9-4.3 8.1-4.3m0-3c-4.5 0-7.9
+																	1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1
+																	0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3
+																	1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3
+																	1.1.5 1.6.5.6 0 1.1-.2 1.6-.5 1-.6 2.8-2.2
+																	7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6
+																	48 25 48 17.6c0-8-6-14.5-13.4-14.5z">
+															</path>
+														</svg>
+													</span>
+												</a>
+											</form>
+											</div>
+
+										}
+							 
+								</div>
+								<div class="right">
+									<svg aria-label="Save"
+										 class="_8-yf5 "
+										 color="#262626"
+										 fill="#262626"
+										 height="24"
+										 role="img"
+										 viewBox="0 0 48 48"
+										 width="24">
+
+										<!-- Coordinate path -->
+										<path d="M43.5 48c-.4 0-.8-.2-1.1-.4L24 29 5.6
+											47.6c-.4.4-1.1.6-1.6.3-.6-.2-1-.8-1-1.4v-45C3 .7
+											3.7 0 4.5 0h39c.8 0 1.5.7 1.5 1.5v45c0 .6-.4
+											1.2-.9 1.4-.2.1-.4.1-.6.1zM24 26c.8
+											0 1.6.3 2.2.9l15.8 16V3H6v39.9l15.8-16c.6-.6
+											1.4-.9 2.2-.9z">
+										</path>
+									</svg>
+								</div>
+							</div>
+							<p class="likes"> <span class="likes-@bet.ID">@Model.GetBetLikes(bet.ID)</span> like(s)</p>
+
+							<p class="message">
+								<b>@bet.User.UserName</b>
+							</p>
+
+							<div id="mpopupBox-@bet.ID" class="mpopupBox" style="display: none;">
+								<!-- Modal content -->
+								<div class="modal-overlay">
+									<div class="modal-header">
+										<span class="close" onclick="closeCommentsModal(@bet.ID)">&times;</span>
+										<h2>Comments</h2>
+									</div>
+									<div class="modal-body" style="padding-bottom: 20px;">
+										<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+									</div>
+								</div>
+							</div>
+
+							<h4 href="javascript:void(0);" onclick="showCommentsModal(@bet.ID)" class="comments" data-bet-id="@bet.ID">
+								View all <span class="comment-counter-@bet.ID">@Model.GetCommentCounter(bet.ID)</span> comments
+							</h4>
+
+
+								@{
+										var currentDate = DateTime.Now;
+										var daysSinceDate = (currentDate - @bet.Date).Days;
+								}
+									<h5 class="postTime">@daysSinceDate Days Ago</h5>
+							<div class="addComments">
+								<form id="commentForm-@bet.ID" class="add-comment-form" asp-controller="Bet" asp-action="CreateComment">
+									<input hidden asp-for="Comment.BetID" value="@bet.ID">
+
+							
+
+									<div class="comment-container" style="max-height: 150px; overflow: auto;">
+										<textarea class="comment-text-area" style="width: 100%; height: 100%; padding: 10px; box-sizing: border-box; resize: none;" asp-for="Comment.Body" placeholder="Add a comment..."></textarea>
+									</div>
+
+									<a href="#" class="post-button" data-bet-id="@bet.ID" onclick="handleCommentCounter(@bet.ID)">Post</a>
+								</form>
+							</div>
+							
+						</div>
+					</div>
+					}	
+				</div>
+			</div>
+		</main>
+
+
+	<!-- Our Header section Starts from here -->
+	<script src="https://kit.fontawesome.com/8da1ba04bb.js" crossorigin="anonymous"></script>
+	<script>
+		$(document).ready(function () {
+			$('.heart').click(function (e) {
+				e.preventDefault();
+
+				var betId = $(this).data('bet-id');
+
+				$.ajax({
+					type: 'POST',
+					url: '@Url.Action("CreateLike", "Bet")',
+					data: { 'Bet.ID': betId },
+					success: function (result) {
+						console.log(result);
+					},
+					error: function (error) {
+						console.log(error);
+					}
+				});
+			});
+		});
+
+		function incrementLikeCounter(betID) {
+			var betLikes = document.querySelector(`.likes-${betID}`);
+			var likesValue = betLikes.innerHTML;
+			betLikes.innerHTML = Number(likesValue) + 1;
+			var likeFormElement = document.querySelector(`.like-form-container-${betID}`);
+			likeFormElement.innerHTML = `<i class="fa-solid fa-heart fa-xl" style="color: #ff0000; "></i>`
+		}
+		function showCommentsModal(betId) {
+			$.ajax({
+				type: "GET",
+				url: "/Bet/GetComments",
+				data: { betID: betId },
+				dataType: "json",
+				success: function (comments) {
+					var modalBody = $("#mpopupBox-" + betId + " .modal-body");
+					modalBody.empty();
+
+					for (var i = 0; i < comments.length; i++) {
+						var comment = comments[i];
+						var commentHtml = `<div class="row">
+												<div class="col-md-8">
+													<div class="media g-mb-30 media-comment">
+   														<div class="media-body u-shadow-v18 g-bg-secondary g-pa-30">
+															<div class="profile-name-container">
+
+																<img style="border-radius:50%; width: 30px; height: 30px;" class="d-flex rounded-circle g-mt-3 g-mr-15" src="/profilepics/${comment.user.profilePicture}" alt="Image Description"> ${comment.user.userName}
+															</div>
+															<p> 
+																${comment.body	}
+															</p>
+														 
+														</div>
+													</div>
+												</div>
+											</div>`
+
+						modalBody.append(commentHtml);
+					}
+
+					var commentCountSpan = $(".comment-counter-" + betId);
+					commentCountSpan.text(comments.length);
+
+					$("#mpopupBox-" + betId).show();
+				},
+				error: function (error) {
+					console.error("Error fetching comments: ", error);
+				}
+			});
+		}
+		// function showCommentsModal(betId) {
+		// 	$.ajax({
+		// 		type: "GET",
+		// 		url: "/Bet/GetComments",
+		// 		data: { betID: betId }, 
+		// 		dataType: "json",
+		// 		success: function (comments) {
+		// 			var modalBody = $("#mpopupBox-" + betId + " .modal-body");
+		// 			modalBody.empty();
+
+		// 			for (var i = 0; i < comments.length; i++) {
+		// 				modalBody.append("<p>" + comments[i].body + "</p>");
+		// 			}
+
+		// 			var commentCountSpan = $(".comment-counter-" + betId);
+		// 			commentCountSpan.text(comments.length);
+
+		// 			$("#mpopupBox-" + betId).show();
+		// 		},
+		// 		error: function (error) {
+		// 			console.error("Error fetching comments: ", error);
+		// 		}
+		// 	});
+		// }
+
+		function closeCommentsModal(betId) {
+			$("#mpopupBox-" + betId).hide();
+		}
+		window.onclick = function (event) {
+			var modal = document.querySelector(".mpopupBox");
+
+			if (event.target === modal || modal.contains(event.target)) {
+				modal.style.display = "none";
+				document.body.classList.remove("modal-open");
+			}
+		};
+		$(document).ready(function () {
+			$(".post-button").on("click", function (e) {
+				e.preventDefault();
+
+				var formId = $(this).closest("form").attr("id");
+				var formData = $("#" + formId).serialize();
+
+				$.ajax({
+					url: $("#" + formId).attr("action"),
+					type: "POST",
+					data: formData,
+					success: function (response) {
+						// Handle the success response as needed
+						console.log(response);
+
+						// Reset textarea value to placeholder
+						$("#" + formId + " .comment-text-area").val("");
+
+						// Increment comment count and update the h4 element
+
+					},
+					error: function (error) {
+						// Handle the error response as needed
+						console.error(error);
+					}
+				});
+			});
+		});
+		function handleCommentCounter(betID){
+			let commentCounterElement = document.querySelector(`.comment-counter-${betID}`);
+			commentCounter = commentCounterElement.innerHTML;
+			console.log("COMMENT COUNTER SOOIOIS: ",commentCounter);
+			commentCounterElement.innerHTML = Number(commentCounter) + 1;
+		}
+	</script>
+
+</body>
+</html>
+
+					<style>
+						* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+ 
+body {
+  font-family: -apple-system, system-ui, "Segoe UI", Roboto, Oxygen, Ubuntu,
+    Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background: #fafafa;
+}
+
+.profile-name-container{
+	display: flex;
+	align-items: center;
+	column-gap: 10px;
+	margin-bottom: 10px;
+}
+	.logout-button {
+		border: none;
+		background: none;
+		color: palevioletred;
+		font-size: 18px;
+	}
+
+		.logout-button:hover {
+			cursor: pointer;
+			color: red;
+		}
+.navbar {
+  position: fixed;
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(255, 255, 255);
+  width: 100%;
+  border: 1px solid rgb(218, 217, 217);
+}
+
+.comments:hover{
+	cursor: pointer;
+}
+
+	.mpopupBox {
+		z-index: 1000; /* Adjust the value as needed */
+	}
+
+.navbar .container {
+  /* background-color: #555; */
+  padding: 15px 0;
+  width: 75%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* margin: 0 auto; */
+}
+
+.handle-index{
+	z-index: -1;
+}
+.container .logo {
+  display: inline-block;
+  cursor: pointer;
+}
+ 
+.searchbar {
+  width: -10%;
+  text-align: end;
+}
+ 
+.searchbar input {
+  background-color: #fafafa;
+  padding: 5px;
+  text-indent: 21px;
+  outline: none;
+  border: 1px solid rgb(218, 217, 217);
+  border-radius: 2px;
+  color: rgb(77, 77, 77);
+}
+ 
+.searchbar img {
+  position: absolute;
+  margin-left: -10.5rem;
+  margin-top: 0.25rem;
+}
+ 
+.searchbar input::placeholder {
+  font-weight: lighter;
+  color: rgb(172, 172, 172);
+}
+ 
+.nav-links {
+  font-weight: lighter;
+  color: rgb(172, 172, 172);
+  /* background: #333  ; */
+}
+ 
+.nav-group .nav-item {
+  list-style-type: none;
+  margin: 0 8px;
+}
+ 
+.nav-group .nav-item a {
+  font-size: 22px;
+  display: block;
+  color: black;
+}
+ 
+.nav-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ .modal-overlay{
+		BACKGROUND-color: rgb(255,255,255);
+		z-index: 9999;
+		position: absolute;
+		top: 50%;
+		left: 45%;
+		width: 500px;
+		padding: 15px;
+ }
+.action .profile {
+  position: relative;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.action .profile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+main {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ 
+main .container {
+  position: relative;
+  margin-top: 60px;
+  width: 75%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  /* background: #ddd; */
+}
+ 
+.col-9 {
+  width: 100%;
+  margin-top: 30px;
+}
+ 
+.statuses {
+  margin-bottom: 30px;
+  width: 100%;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  padding: 20px 0;
+  border-radius: 2px;
+  border: 1px solid rgb(218, 217, 217);
+  overflow: auto;
+}
+ 
+.statuses .status {
+  display: inline-block;
+  border-radius: 50%;
+  overflow: auto;
+  width: 70px;
+  height: 70px;
+  min-width: 70px;
+  min-height: 70px;
+  background: linear-gradient(to right, red, orange);
+  padding: 2px;
+  margin-left: 15px;
+  cursor: pointer;
+}
+ 
+.statuses .status .image {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+}
+ 
+.statuses .status img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+ 
+.col-3 {
+  width: 33%;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 90px;
+}
+ 
+.col-3 h4 {
+  color: rgb(100, 100, 100);
+}
+ 
+
+.col-3 .card {
+  margin-bottom: 20px;
+  position: relative;
+  width: 100%;
+  /* min-height: 400px; */
+  display: inline-block;
+}
+ 
+.col-3 .card .top {
+  padding: 10px 0px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+ 
+.col-3 .card .top a {
+  color: #1d92ff;
+}
+ 
+.col-3 .card .bottom {
+  padding: 10px 20px;
+}
+ 
+.col-3 .card .top .userDetails {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+ 
+.col-3 .card .top .userDetails h3 {
+  font-size: 16px;
+  color: #4d4d4f;
+  font-weight: 500;
+  line-height: 1em;
+}
+ 
+.col-3 .card .top .userDetails h3 span {
+  font-size: 0.75em;
+}
+ 
+.col-3 .card .top .userDetails h3 span {
+  font-size: 0.75em;
+}
+ 
+.col-9 .card {
+  margin-bottom: 20px;
+  position: relative;
+  width: 100%;
+  /* min-height: 400px; */
+  display: inline-block;
+  border: 1px solid rgba(7, 7, 7, 0.24);
+}
+ 
+.col-9 .card .top {
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.col-9 .card .bottom {
+  padding: 10px 20px;
+}
+ 
+.col-9 .card .top .userDetails {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+ 
+.profilepic {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.add-comment-form{
+	width: 100%;
+}
+.profilepic .profile_img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: hidden;
+  width: 30px;
+  height: 30px;
+  background: linear-gradient(to right, red, orange);
+  padding: 2px;
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.heart-icon-outline:hover {
+	fill: none;
+	stroke: #808080; /* Gray color for outline */
+	stroke-width: 2; /* Adjust the thickness of the outline */
+}
+ 
+.profilepic .profile_img .image {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+}
+ 
+.profilepic .profile_img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+ 
+.cover {
+  width: 100%;
+  height: 100%;
+}
+ 
+.col-9 .card .top .userDetails h3 {
+  /* width: 100%; */
+  font-size: 16px;
+  color: #4d4d4f;
+  font-weight: 500;
+  line-height: 1em;
+}
+ 
+.col-9 .card .top .userDetails h3 span {
+  font-size: 0.75em;
+}
+ 
+.col-9 .card .top .userDetails h3 span {
+  font-size: 0.75em;
+}
+ 
+.dot {
+  transform: scale(0.6);
+  cursor: pointer;
+}
+ 
+.imgBx {
+  position: relative;
+  width: 100%;
+  min-height: 600px;
+  margin: 10px 0 15px;
+  z-index: -1;
+}
+ 
+.actionBtns {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+ 
+.actionBtns svg {
+  cursor: pointer;
+}
+ 
+.actionBtns .left svg {
+  margin-right: 8px;
+}
+ 
+.likes {
+  font-weight: 500;
+  margin-top: 5px;
+  font-size: 14px;
+  color: #4d4d4f;
+}
+ 
+.message {
+  font-weight: 400;
+  margin-top: 5px;
+  font-size: 14px;
+  color: #777;
+  line-height: 1.5em;
+}
+ 
+.message b {
+  color: #262626;
+}
+ 
+.message span {
+  cursor: pointer;
+  color: #1d92ff;
+}
+ 
+.comments {
+  margin-top: 10px;
+  font-weight: 400;
+  color: #999;
+}
+ 
+.addComments {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  border-top: 1px solid #ddd;
+  padding: 10px 0;
+}
+ 
+.addComments a {
+  color: #1d92ffcb;
+  font-weight: 500;
+  right: 20px;
+}
+ 
+.addComments .reaction {
+  position: relative;
+  font-size: 1.3rem;
+  margin-right: 10px;
+  color: rgb(88, 88, 88);
+}
+ 
+input.text {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-weight: 400;
+  font-size: 14px;
+  color: #262626;
+  background: none;
+}
+ 
+input.text::placeholder {
+  color: #777;
+}
+ 
+.postTime {
+  margin-top: 8px;
+  font-weight: lighter;
+  color: rgb(163, 163, 163);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+ 
+a {
+  text-decoration: none;
+}
+ 
+.hidden {
+  display: none;
+}
+ 
+ media screen and (max-width: 1000px) {
+  .col-9 {
+    width: 100%;
+    background: #fafafa;
+  }
+ 
+  .col-3 {
+    display: none;
+  }
+}
+ 
+ media screen and (max-width: 600px) {
+  .container {
+		width: 70% !important;
+  }
+ 
+  .navbar .container {
+    padding: 15px 10px !important;
+  }
+ 
+  .col-9 {
+    margin-top: 4px;
+    min-width: 100%;
+  }
+ 
+  .statuses {
+    margin-bottom: 0px;
+  }
+ 
+  .col-9 .card {
+    margin-bottom: 0px;
+    width: 100%;
+    border: none;
+  }
+ 
+  .imgBx {
+    position: relative;
+    width: 100%;
+    min-height: 400px;
+    margin: 10px 0 15px;
+  }
+ 
+  .searchbar {
+    display: none;
+  }
+}
+ 
+.footer .footer-section {
+  margin-left: 0.5rem;
+  color: #999999;
+  font-size: 14px;
+  font-family: sans-serif;
+}
+ 
+.footer a:hover {
+  color: #ff0000;
+}
+
+	.mpopupBox {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.5); /* Light background for modal */
+		overflow: auto;
+		display: none;
+	}
+
+	.modal-content {
+		margin: 10% auto;
+		padding: 20px;
+		width: 80%;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	}
+
+	.modal-header {
+		padding: 10px;
+		background-color: #f1f1f1;
+	}
+
+	.modal-body {
+		padding: 10px;
+	}
+
+	.close {
+		color: #000;
+		float: right;
+		font-size: 20px;
+		font-weight: bold;
+		cursor: pointer;
+	}
+
+	/* Add this CSS to style the dark background overlay */
+	body {
+		transition: background-color 0.3s ease;
+	}
+/* add animation effects */
+ -webkit-keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+ keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}.g-height-50 {
+    height: 50px;
+}
+
+.g-width-50 {
+    width: 50px !important;
+}
+
+ media (min-width: 0){
+    .g-pa-30 {
+        padding: 2.14286rem !important;
+    }
+}
+
+.g-bg-secondary {
+    background-color: #fafafa !important;
+}
+
+.u-shadow-v18 {
+    box-shadow: 0 5px 10px -6px rgba(0, 0, 0, 0.15);
+}
+
+.g-color-gray-dark-v4 {
+    color: #777 !important;
+}
+
+.g-font-size-12 {
+    font-size: 0.85714rem !important;
+}
+
+.media-comment {
+    margin-top:20px
+}
+					</style>
+
+
+
