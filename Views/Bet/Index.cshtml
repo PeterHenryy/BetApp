@@ -215,10 +215,18 @@
 								</div>
 							</div>
 
-							<h4 href="javascript:void(0);" onclick="showCommentsModal(@bet.ID)" class="comments" data-bet-id="@bet.ID">
-								View all <span class="comment-counter-@bet.ID">@Model.GetCommentCounter(bet.ID)</span> comments
-							</h4>
-
+							@if (@Model.GetCommentCounter(bet.ID) > 0)
+							{
+								<h4 href="javascript:void(0);" onclick="showCommentsModal(@bet.ID)" class="comments" data-bet-id="@bet.ID">
+									View comments (<span class="comment-counter-@bet.ID">@Model.GetCommentCounter(bet.ID)</span>) 
+								</h4>
+							}
+							else
+							{
+								<h4 class="no-comments-yet no-comments-@bet.ID">
+									This post has no comments yet
+								</h4>
+							}
 
 								@{
 										var currentDate = DateTime.Now;
@@ -319,30 +327,7 @@
 				}
 			});
 		}
-		// function showCommentsModal(betId) {
-		// 	$.ajax({
-		// 		type: "GET",
-		// 		url: "/Bet/GetComments",
-		// 		data: { betID: betId }, 
-		// 		dataType: "json",
-		// 		success: function (comments) {
-		// 			var modalBody = $("#mpopupBox-" + betId + " .modal-body");
-		// 			modalBody.empty();
 
-		// 			for (var i = 0; i < comments.length; i++) {
-		// 				modalBody.append("<p>" + comments[i].body + "</p>");
-		// 			}
-
-		// 			var commentCountSpan = $(".comment-counter-" + betId);
-		// 			commentCountSpan.text(comments.length);
-
-		// 			$("#mpopupBox-" + betId).show();
-		// 		},
-		// 		error: function (error) {
-		// 			console.error("Error fetching comments: ", error);
-		// 		}
-		// 	});
-		// }
 
 		function closeCommentsModal(betId) {
 			$("#mpopupBox-" + betId).hide();
@@ -383,11 +368,23 @@
 				});
 			});
 		});
+
 		function handleCommentCounter(betID){
 			let commentCounterElement = document.querySelector(`.comment-counter-${betID}`);
-			commentCounter = commentCounterElement.innerHTML;
-			console.log("COMMENT COUNTER SOOIOIS: ",commentCounter);
-			commentCounterElement.innerHTML = Number(commentCounter) + 1;
+			if(commentCounterElement != null){
+
+				commentCounter = commentCounterElement.innerHTML;
+				commentCounterElement.innerHTML = Number(commentCounter) + 1;
+			}
+			else{
+
+				let noCommentElement = document.querySelector(`.no-comments-${betID}`);
+				noCommentElement.innerHTML = `View comments (<span class="comment-counter-${betID}">1</span>)`;
+				noCommentElement.classList.add('comments');
+				noCommentElement.addEventListener('click', () => {
+					showCommentsModal(betID);
+				});
+			}
 		}
 	</script>
 
@@ -603,7 +600,12 @@ main .container {
   height: 100%;
   object-fit: cover;
 }
- 
+.no-comments-yet{
+
+	margin-top: 10px;
+	font-weight: 400;
+	color: #999;"
+}
 .col-3 {
   width: 33%;
   position: -webkit-sticky;
